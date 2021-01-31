@@ -1,88 +1,105 @@
 (function() {
-  'use strict';
 
-  angular.module('Shoppinglistapp',[])
-    .controller('ToBuyController',ToBuyController)
-    .controller('AlreadyBoughtController',AlreadyBoughtController)
-    .service('ShoppingListCheckOffService',ShoppingListCheckOffService);
+  angular.module("NarrowItDownApp", [])
+  .controller("NarrowItDownController", NarrowItDownController)
+  .service("MenuSearchService", MenuSearchService)
+  .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
+  .directive('foundItems', foundItems);
 
-    ToBuyController.$inject = ['ShoppingListCheckOffService'];
-    function ToBuyController(ShoppingListCheckOffService) {
-      var buy = this;
+  function foundItems() {
+    var ddo = {
+      templateUrl : 'loader/itemsloaderindicator.template.html',
+      scope : {
+        list : '<',
+        onRemove : '&'
+      }
+    };
+    return ddo;
 
-      buy.items = ShoppingListCheckOffService.displayallitems();
-      buy.boughtmessage = ShoppingListCheckOffService.msg();
-      buy.additem = function (itemindex) {
-        ShoppingListCheckOffService.additem(buy.items[itemindex].name,buy.items[itemindex].quantity,itemindex)
-        buy.errormessage = ShoppingListCheckOffService.checkallitemstobuy(buy.items.length);
-        buy.boughtmessage = ShoppingListCheckOffService.msg();
-      };
+  }
 
-    }
+  NarrowItDownController.$inject = ["MenuSearchService"];
+  function NarrowItDownController(MenuSearchService) {
+    var ndc = this;
+    ndc.searchtext = "";
+    ndc.novalue = "";
 
-    AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
-    function AlreadyBoughtController(ShoppingListCheckOffService) {
-      var bought = this;
-      bought.items = ShoppingListCheckOffService.displayallboughtitems();
-    }
-
-    function ShoppingListCheckOffService() {
-        var service = this;
-
-        var tobuy = [
-          {
-            name : "Milk",
-            quantity : "2"
-          },
-          {
-            name : "Donuts",
-            quantity : "2"
-          },
-          {
-            name : "Cookies",
-            quantity : "3"
-          },
-          {
-            name : "Chocolates",
-            quantity : "10"
-          },
-          {
-            name : "Chips",
-            quantity : "8"
+    ndc.getallitems = function() {
+      ndc.novalue = "";
+      var promise = MenuSearchService.getMatchedMenuItems();
+      promise.then(function(response) {
+        if(ndc.searchtext.trim() == ""){
+          ndc.novalue = "Nothing found";
+          ndc.itemlist = ""
+        }
+        else {
+        ndc.itemlist = response.data;
+        MenuSearchService.additemsinarray(ndc.itemlist.menu_items);
+          ndc.itemlist.menu_items = MenuSearchService.filterarrayelements(ndc.searchtext);
+          if(ndc.itemlist.menu_items.length <= 0){
+            ndc.novalue = "Nothing found";
           }
-        ];
-        var bought = [];
+        }
 
-
-        service.additem = function (itemname,itemquantity,itemindex) {
-          var items = {
-            name : itemname,
-            quantity : itemquantity
-          };
-          bought.push(tobuy[itemindex]);
-          tobuy.splice(itemindex, 1);
-          // console.log(bought.length);
-        };
-
-        service.displayallitems = function() {
-      return tobuy;
+        return response;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
     };
 
-    service.displayallboughtitems = function() {
-  return bought;
-};
-service.checkallitemstobuy = function (maxvalue) {
-  if(maxvalue == 0){
-    return "Everything is bought!";
-  }
-};
-service.msg = function () {
-  if(bought.length == 0){
-      return "Nothing bought yet.";
-  }
-};
-}
+    ndc.onremove = function(itemindex) {
+      ndc.itemlist.menu_items = MenuSearchService.deleteentry(itemindex);
+      if(ndc.itemlist.menu_items.length <= 0){
+        ndc.novalue = "Nothing found";
+      }
+    }
 
+  }
+
+  MenuSearchService.$inject = ["$http","ApiBasePath","$rootScope"];
+  function MenuSearchService($http,ApiBasePath,$rootScope) {
+    var service = this;
+    var menu = [];
+    var found = [];
+
+    service.getMatchedMenuItems = function() {
+      var response = $http({
+        url : (ApiBasePath + "/menu_items.json")
+      });
+
+      return response;
+    };
+
+    service.deleteentry = function(itemindex) {
+      found.splice(itemindex,1);
+      return found;
+    };
+
+    service.additemsinarray = function(values) {
+      var i =0;
+      menu = [];
+        for(i=0;i<values.length;i++){
+          menu.push(values[i]);
+        }
+        return menu;
+
+    }
+
+    service.filterarrayelements = function(textvalue) {
+      var i=0;
+      found =  [];
+      for(i=0;i<menu.length;i++){
+        if(menu[i].name.toUpperCase().includes(textvalue.toUpperCase())){
+          found.push(menu[i]);
+        }
+      }
+
+      return found;
+    }
+
+
+  }
 }
 
 )();
