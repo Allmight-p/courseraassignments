@@ -1,0 +1,10 @@
+<div id = "itmcat">
+<a ui-sref="mainpage">Home</a> &lt;
+<a ui-sref="home">Categories</a>
+<ul class="list-group"  >
+   <li class="list-group-item"  ng-repeat="items in icc.itemsfordisplay">
+   <div id="listinname">Name</div> : {{ items.name }},
+   <div id="listindesc"> Description</div> :{{items.description}},<div id="listinpr">Price</div> :$ {{items.price_large}}
+    </li>
+  </ul>
+  </div>

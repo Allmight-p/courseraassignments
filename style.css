@@ -1,0 +1,29 @@
+li[ui-sref]:hover {
+  background-color: yellow;
+  cursor: pointer;
+  border: solid black 1px;
+}
+
+a[ui-sref]:hover {
+  cursor: pointer;
+  color: blue;
+  background-color: yellow;
+}
+
+a[ui-sref] {
+  cursor: pointer;
+  color: red;
+}
+
+#itmcat{
+  background-color: gainsboro;
+}
+#listinname{
+  color: seagreen;
+}
+#listindesc{
+  color: palevioletred;
+}
+#listinpr{
+  color: mediumpurple;
+}

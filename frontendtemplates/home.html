@@ -1,0 +1,7 @@
+<a ui-sref="mainpage">Home</a> &lt;
+<a ui-sref="home">Categories</a> 
+<ul class="list-group" ng-controller="menulistcontroller as mlc" >
+   <li class="list-group-item" ui-sref="itemcategory({itemId : $index})" ng-repeat="items in mlc.itemlist">
+   {{ items.name }}
+    </li>
+  </ul>
