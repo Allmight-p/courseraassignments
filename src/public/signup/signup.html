@@ -1,0 +1,51 @@
+<form class="container" name="regform" novalidate>
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+    <label for="validationCustom01" class="form-label">First name</label>
+    <input type="text" class="form-control" name="username" style="width: 400px;" ng-model="signupctrl.username" minlength = "6" id="validationCustom01" required>
+    </div>
+    <div class="col-sm">
+    <span ng-if="(regform.username.$error.required || regform.username.$error.minlength) && regform.username.$touched" style="color:white;">username must atleast have 6 characters</span>
+    </div>
+    </div>
+    </div>
+    <div class="container">
+    <div class="row">
+      <div class="col-sm">
+    <label for="validationCustom02" class="form-label">Last name</label>
+    <input type="text" class="form-control" name="lastname" ng-model="signupctrl.lastname" style="width: 400px;" id="validationCustom02" required>
+    </div>
+    <span ng-if="regform.lastname.$error.required && regform.lastname.$touched" style="color:white;">lastname is mandatory</span>
+    </div>
+    </div>
+    <div class="container">
+    <div class="row">
+      <div class="col-sm">
+    <label for="exampleInputEmail1" class="form-label">Email address</label>
+    <input type="email" class="form-control" name="email" ng-model="signupctrl.email" style="width: 400px;" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <span ng-if="regform.email.$invalid && regform.email.$touched" style="color:white;">E-mail format is invalid</span>
+    </div>
+    </div>
+    <div class="container">
+    <div class="row">
+      <div class="col-sm">
+    <label for="validationCustom02" class="form-label">Phone no.</label>
+    <input type="text" class="form-control" name="phone" ng-model="signupctrl.phoneno" style="width: 400px;" id="validationCustom02" pattern="(\d{3})-(\d{3})-(\d{4})" required>
+    </div>
+          <span ng-if="regform.phone.$invalid && regform.phone.$touched" style="color:white;">
+            Phone must be in the format ###-###-####.
+          </span>
+        </div>
+        </div>
+    <label for="validationCustom02" class="form-label">Favorite dish menu number</label>
+    <br>
+    <!-- <input type="text" class="form-control" style="width: 400px;" ng-model="signupctrl.favdish" id="validationCustom02" required> -->
+    <select class="" name="" style="color : black; width: 400px;"  ng-model = "signupctrl.favdish">
+      <option ng-repeat = "shrtnames in signupctrl.favcategories">{{shrtnames.short_name}} - {{shrtnames.name}}</option>
+    </select>
+    <br>
+    <button type="button" ng-disabled = "regform.$invalid" ng-click = "signupctrl.savedetails()" class="btn btn-warning">SignUp</button>
+    <span ng-show="signupctrl.result">{{signupctrl.result}}</span>
+  </form>

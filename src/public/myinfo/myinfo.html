@@ -1,0 +1,11 @@
+<div class="container" ng-show="myinfoctrl.details.name">
+<span style="color:white;">Username : {{myinfoctrl.details.name}}</span><br>
+<span style="color:white;">Lastname : {{myinfoctrl.details.lastname}}</span><br>
+<span style="color:white;">E-mail : {{myinfoctrl.details.emailid}}</span><br>
+<span style="color:white;">Ph-no : {{myinfoctrl.details.phoneno}}</span><br>
+<span style="color:white;">Favorite Dish : {{myinfoctrl.details.fulldet}}</span><br>
+<img width="200" height="200" ng-src="images/menu/{{myinfoctrl.details.favitem}}/{{myinfoctrl.details.favitem}}.jpg" alt="{{myinfoctrl.details.fulldet}}">
+</div>
+<div class="container" ng-hide="myinfoctrl.details.name">
+<span style="color:white;">Not Signed Up Yet. <a ui-sref="public.signup">Sign up Now!</a></span>
+</div>
